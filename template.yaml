@@ -35,7 +35,7 @@ Resources:
         - arm64
       Environment:
         Variables:
-          DYNAMODB_TABLE_NAME: game_markers
+          DYNAMODB_TABLE_NAME: game_metrics
       Events:
         PutGameMarker:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -75,7 +75,7 @@ Resources:
                   - dynamodb:UpdateItem
                   - dynamodb:Scan
                   - dynamodb:Query
-                Resource: "arn:aws:dynamodb:us-east-1:857321044479:table/game_markers"
+                Resource: "arn:aws:dynamodb:us-east-1:857321044479:table/game_metrics"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

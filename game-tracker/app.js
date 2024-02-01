@@ -16,21 +16,37 @@ exports.lambdaHandler = async (event) => {
     try {
       const dynamoDB = new AWS.DynamoDB.DocumentClient();
       let requestJSON = JSON.parse(event.body);
-      await dynamoDB
-        .put({
-          TableName: "game_markers",
-          Item: {
-            game: uuidv4(),
-            client_id: requestJSON.client_id,
-            first_name: requestJSON.first_name,
-            last_name: requestJSON.last_name,
-            lawyer_name: requestJSON.lawyer_name,
-            time_clicked: requestJSON.time_clicked,
-          },
+
+      const result = await dynamoDB
+        .get({
+          TableName: "game_metrics" || process.env.DYNAMODB_TABLE_NAME, // Using environment variable for table name
+          Key: { id: requestJSON.client_id },
         })
         .promise();
 
-      body = `Item with id ${requestJSON.client_id} added.`;
+      if (result.Item) {
+        body = `Item with id ${requestJSON.client_id} already exists.`;
+        return {
+          statusCode,
+          body,
+          headers,
+        };
+      } else {
+        await dynamoDB
+          .put({
+            TableName: "game_metrics",
+            Item: {
+              id: requestJSON.client_id,
+              first_name: requestJSON.first_name,
+              last_name: requestJSON.last_name,
+              lawyer_name: requestJSON.lawyer_name,
+              time_clicked: requestJSON.time_clicked,
+            },
+          })
+          .promise();
+
+        body = `Item with id ${requestJSON.client_id} added.`;
+      }
     } catch (err) {
       statusCode = 400;
       body = err.message;
@@ -52,8 +68,8 @@ exports.lambdaHandler = async (event) => {
       const id = event.pathParameters.id; // Extracting id from path parameters
       const result = await dynamoDB
         .get({
-          TableName: "game_markers" || process.env.DYNAMODB_TABLE_NAME, // Using environment variable for table name
-          Key: { game: id },
+          TableName: "game_metrics" || process.env.DYNAMODB_TABLE_NAME, // Using environment variable for table name
+          Key: { id: id },
         })
         .promise();
 
@@ -75,7 +91,7 @@ exports.lambdaHandler = async (event) => {
       const dynamoDB = new AWS.DynamoDB.DocumentClient();
       const result = await dynamoDB
         .scan({
-          TableName: "game_markers" || process.env.DYNAMODB_TABLE_NAME, // Using environment variable for table name
+          TableName: "game_metrics" || process.env.DYNAMODB_TABLE_NAME, // Using environment variable for table name
         })
         .promise();
 
