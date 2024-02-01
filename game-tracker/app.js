@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 require("dotenv").config();
+const { v4: uuidv4 } = require('uuid');
 
 
 exports.lambdaHandler = async (event) => {
@@ -15,8 +16,8 @@ exports.lambdaHandler = async (event) => {
       await dynamoDB.put({
           TableName: "game_markers",
           Item: {
-              id: requestJSON.id,
-              game: "game",
+              game: uuidv4(),
+              client_id: requestJSON.client_id,
               first_name: requestJSON.first_name,
               last_name: requestJSON.last_name,
               lawyer_name: requestJSON.lawyer_name,
@@ -24,7 +25,7 @@ exports.lambdaHandler = async (event) => {
           }
       }).promise();
 
-      body = `Item with id ${requestJSON.id} added.`;
+      body = `Item with id ${requestJSON.client_id} added.`;
   } catch (err) {
       statusCode = 400;
       body = err.message;

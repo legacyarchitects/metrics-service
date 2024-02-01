@@ -9,7 +9,8 @@
   "dependencies": {
     "aws-sdk": "^2.1548.0",
     "axios": ">=0.21.1",
-    "dotenv": "^16.4.1"
+    "dotenv": "^16.4.1",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "test": "mocha tests/unit/"
