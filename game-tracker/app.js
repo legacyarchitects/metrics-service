@@ -7,7 +7,10 @@ exports.lambdaHandler = async (event) => {
   let body;
   let statusCode = 200;
   const headers = {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*", // Allows access from any origin
+    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Access-Control-Allow-Methods",
+    "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,POST,DELETE", // Adjust based on the methods your API supports
   };
   
   try {
