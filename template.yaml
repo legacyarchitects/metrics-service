@@ -11,19 +11,20 @@ Globals:
     Timeout: 3
 
 Resources:
-  MyDynamoDBTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: game_markers
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
+  # MyDynamoDBTable:
+  #   Type: AWS::DynamoDB::Table
+  #   Properties:
+  #     TableName: game_marker_prod
+  #     AttributeDefinitions:
+  #       - AttributeName: id
+  #         AttributeType: S
+  #     KeySchema:
+  #       - AttributeName: id
+  #         KeyType: HASH
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 5
+  #       WriteCapacityUnits: 5
+
   GameTrackerApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -43,14 +44,23 @@ Resources:
         - arm64
       Environment:
         Variables:
-          DYNAMODB_TABLE_NAME: !Ref MyDynamoDBTable
+          DYNAMODB_TABLE_NAME: game_metrics
       Events:
-        GameTrackerService:
+        PutGameMarker:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /api/contacts/finalize
             Method: put
-
+        GetGameMarker:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/contacts/{id}
+            Method: get
+        GetAllGameMarkers:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/contacts
+            Method: get    
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -74,7 +84,7 @@ Resources:
                   - dynamodb:UpdateItem
                   - dynamodb:Scan
                   - dynamodb:Query
-                Resource: !GetAtt MyDynamoDBTable.Arn
+                Resource: "arn:aws:dynamodb:us-east-1:857321044479:table/game_metrics"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
