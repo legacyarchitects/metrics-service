@@ -11,29 +11,6 @@ Globals:
     Timeout: 3
 
 Resources:
-  # MyDynamoDBTable:
-  #   Type: AWS::DynamoDB::Table
-  #   Properties:
-  #     TableName: game_marker_prod
-  #     AttributeDefinitions:
-  #       - AttributeName: id
-  #         AttributeType: S
-  #     KeySchema:
-  #       - AttributeName: id
-  #         KeyType: HASH
-  #     ProvisionedThroughput:
-  #       ReadCapacityUnits: 5
-  #       WriteCapacityUnits: 5
-
-  GameTrackerApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      Cors:
-        AllowOrigin: "'*'"
-        AllowMethods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
-
   GameTrackerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -92,7 +69,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   GameTrackerApi:
     Description: "API Gateway endpoint URL for Prod stage for Game Tracker function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
   GameTrackerFunction:
     Description: "Game Tracker Lambda Function ARN"
     Value: !GetAtt GameTrackerFunction.Arn
